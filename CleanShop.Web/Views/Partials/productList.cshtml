@@ -1,0 +1,76 @@
+﻿@inherits UmbracoViewPage
+
+@using Clean.Core.Helpers
+
+@{
+    var shop = UmbracoContext.Content.GetAtRoot().DescendantsOrSelf<Shop>().FirstOrDefault();
+    var isProductListPage = Model.Id == shop.Id;
+    var fallbackPageSize = isProductListPage ? 10 : 3;
+
+    var pageSize = QueryStringHelper.GetIntFromQueryString(Request, "size", fallbackPageSize);
+    var pageNumber = QueryStringHelper.GetIntFromQueryString(Request, "page", 1);
+    var allProducts = shop.Children<Product>().Where(x => x.IsVisible());
+    var pageOfProducts = allProducts.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+    var totalItemCount = allProducts.Count();
+    var pageCount = totalItemCount > 0 ? Math.Ceiling((double)totalItemCount / pageSize) : 1;
+
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            @foreach (var product in pageOfProducts)
+            {
+                <div class="post-preview">
+                    <a href="@product.Url">
+                        <h2 class="post-title">
+                            @(!string.IsNullOrWhiteSpace(product.Title) ? product.Title : product.Name)
+                        </h2>
+                        @if (!string.IsNullOrWhiteSpace(product.Subtitle))
+                        {
+                            <h3 class="post-subtitle">@product.Subtitle</h3>
+                        }
+                    </a>
+                </div>
+                <hr>
+            }
+            <!-- Pager -->
+                <div id="paging" class="clearfix">
+                    @if (isProductListPage)
+                    {
+                        if (pageCount > 1)
+                        {
+                            <div class="paging-block">
+                                @if (pageNumber > 1)
+                                {
+                                <a class="btn btn-primary float-left" href="@($"{shop.Url}?page={pageNumber - 1}&size={pageSize}")">@Umbraco.GetDictionaryValue("Paging.Previous")</a>
+                                }
+                                else
+                                {
+                                    @Html.Raw("&nbsp;")
+                                }
+                            </div>
+                            <div class="paging-block text-center">
+                                <span>@Umbraco.GetDictionaryValue("Paging.Page") @pageNumber @Umbraco.GetDictionaryValue("Paging.Of") @pageCount</span>
+                            </div>
+                            <div class="paging-block">
+                                @if (pageNumber < pageCount)
+                                {
+                                <a class="btn btn-primary float-right" href="@($"{shop.Url}?page={pageNumber + 1}&size={pageSize}")">@Umbraco.GetDictionaryValue("Paging.Next")</a>
+                                }
+                                else
+                                {
+                                    @Html.Raw("&nbsp;")
+                                }
+                            </div>
+
+                        }
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary float-right" href="@(shop.Url)">@Umbraco.GetDictionaryValue("ProductList.ViewAll")</a>
+                    }
+                </div>
+        </div>
+    </div>
+</div>

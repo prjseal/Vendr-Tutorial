@@ -1,0 +1,16 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/CleanShop.Web/App_Data/cache
+/CleanShop.Web/App_Data/Logs
+/CleanShop.Web/App_Data/Models
+/CleanShop.Web/App_Data/packages
+/CleanShop.Web/App_Data/TEMP
+/CleanShop.Web/bin
+/CleanShop.Web/obj/Debug
+/CleanShop.Web/Umbraco
+/packages
+/CleanShop.Core/bin/Debug
+/CleanShop.Core/obj/Debug
