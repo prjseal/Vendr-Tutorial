@@ -1,0 +1,54 @@
+﻿<div ng-controller="Vendr.Controllers.CountryCreateController as vm" class="vendr" ng-cloak>
+
+    <div class="umbracoDialog umb-dialog-body with-footer">
+
+        <h5>Create an item under Countries</h5>
+
+        <div class="umb-pane" ng-if="!vm.options.selectPreset">
+
+            <ul class="umb-actions umb-actions-child">
+                <li class="umb-action">
+                    <button class="umb-action-link umb-outline btn-reset" ng-click="vm.createNew()" umb-auto-focus>
+                        <i class="large icon-flag-alt"></i>
+                        <span class="menu-label">New blank country</span>
+                    </button>
+                </li>
+                <li class="umb-action">
+                    <button class="umb-action-link  umb-outline btn-reset" ng-click="vm.selectPreset()">
+                        <i class="large icon icon-flag-alt"></i>
+                        <span class="menu-label">New country from IS0 3166 preset</span>
+                    </button>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="umb-pane" ng-if="vm.options.selectPreset">
+
+            <div class="umb-control-group">
+                <div class="form-search">
+                    <i class="icon icon-search"></i>
+                    <input type="text" name="filter" ng-model="vm.options.presetFilter" class="umb-search-field search-query -full-width-input" placeholder="Type to search..." autocomplete="off" umb-auto-focus>
+                </div>
+            </div>            
+
+            <ul class="umb-actions umb-actions-child">
+                <li class="umb-action" ng-repeat="preset in vm.options.presets | filter:vm.options.presetFilter">
+                    <button class="umb-action-link umb-outline btn-reset" ng-click="vm.createNewFromPreset(preset)">
+                        <i class="icon-flag-alt icon" style="font-size: 20px;"></i>
+                        <span class="menu-label" style="margin-left: 0; padding-left: 5px;">{{ preset.name }}</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Dialog footer -->
+    <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar">
+        <button class="btn btn-info" ng-click="vm.close()">
+            <localize key="buttons_somethingElse">Do something else</localize>
+        </button>
+    </div>
+
+</div>
