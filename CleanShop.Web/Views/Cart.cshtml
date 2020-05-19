@@ -1,0 +1,104 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Cart>
+@using Clean.Core.Extensions
+@using Clean.Core.ViewModels
+@using CleanShop.Core.Extensions
+@using Vendr.Core
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+	Layout = "master.cshtml";
+    var order = Model.GetCurrentOrder();
+}
+
+@Html.Partial("~/Views/Partials/pageHeader.cshtml", new PageHeaderViewModel(Model.Name, Model.Title, Model.Subtitle, Model.MainImage))
+
+<article>
+    @Html.GetGridHtml(Model, "mainContent", "Clean", fluidImages: true)
+    
+    <div class="container">
+        <h3>Shopping Cart</h3>
+        <br/>
+        @if (Model != null && order != null && order.OrderLines.Any())
+        {
+            using (Html.BeginUmbracoForm("UpdateCart", "CartSurface"))
+            {
+                <div class="table-responsive">
+                    <table class="table table-shopping">
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th></th>
+                            <th></th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in order.OrderLines.Select((ol, i) => new {OrderLine = ol, Index = i}))
+                            {
+                                var product = Umbraco.Content(item.OrderLine.ProductReference.As<Guid>());
+                                var image = product.Value<IPublishedContent>("mainImage");
+                                <tr>
+                                    <td>
+                                        <div>
+                                            @if (image != null)
+                                            {
+                                                <a href="@product.Url">
+                                                    <img src="@image.GetCropUrl(120, 120)" alt="..."/>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td colspan="2">
+                                        <a href="@product.Url">@item.OrderLine.Name</a>
+                                    </td>
+                                    <td>@(item.OrderLine.UnitPrice.Value.Formatted())</td>
+                                    <td>
+                                        <div class="input-group">
+                                            @Html.Hidden($"orderLines[{item.Index}].Id", item.OrderLine.Id)
+                                            @Html.TextBox($"orderLines[{item.Index}].Quantity", (int)item.OrderLine.Quantity, 
+                                                new { @class="form-control input-number quantity", type="number"})
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @(item.OrderLine.TotalPrice.Value.Formatted())
+                                    </td>
+                                    <td>
+                                        <a href="@Url.SurfaceAction("RemoveFromCart", "CartSurface", new {OrderLineId = item.OrderLine.Id})" rel="tooltip" class="btn btn-link">
+                                            Remove <i class="fas fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2">Total</td>
+                                    <td class="td-price">
+                                        @(order.SubtotalPrice.Value.Formatted())
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <button class="btn btn-success btn-round" title="Refresh Cart">Update Cart <i class="fas fa-sync"></i></button>
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="/checkout/" class="btn btn-info btn-round">Go to checkout <i class="fas fa-shopping-cart"></i></a>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            }
+        }
+        else
+        {
+            var shopPage = Model.Root().ChildrenOfType("shop").FirstOrDefault();
+
+            <p>Your shopping cart is empty.</p>
+            if (shopPage != null)
+            {
+                <p>Go to the <a href="@shopPage.Url">@shopPage.Name</a> to add some items to your cart</p>
+            }
+        }
+    </div>
+</article>

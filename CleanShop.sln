@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanShop.Web", "CleanShop.Web\CleanShop.Web.csproj", "{88C0F980-CCDC-4C3D-93B2-AE7C9AC9D773}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanShop.Core", "CleanShop.Core\CleanShop.Core.csproj", "{B2703F0A-3C50-4A9B-97A6-DA2B91A0BC04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{88C0F980-CCDC-4C3D-93B2-AE7C9AC9D773}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88C0F980-CCDC-4C3D-93B2-AE7C9AC9D773}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88C0F980-CCDC-4C3D-93B2-AE7C9AC9D773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2703F0A-3C50-4A9B-97A6-DA2B91A0BC04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2703F0A-3C50-4A9B-97A6-DA2B91A0BC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2703F0A-3C50-4A9B-97A6-DA2B91A0BC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2703F0A-3C50-4A9B-97A6-DA2B91A0BC04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
