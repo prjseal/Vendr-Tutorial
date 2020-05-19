@@ -8,6 +8,8 @@
 
 @{
     Layout = "master.cshtml";
+    var homePage = Model.AncestorOrSelf<Home>();
+    var cartPage = homePage.ChildrenOfType("cart").FirstOrDefault();
 }
 
 @Html.Partial("~/Views/Partials/pageHeader.cshtml", new PageHeaderViewModel(Model.Name, Model.Title, Model.Subtitle, Model.MainImage))
@@ -24,7 +26,7 @@
                             <div>
                                 <h2>@(Model.CalculatePrice()?.Formatted())</h2>
                                 
-                                @using (Html.BeginUmbracoForm("AddToCart", "CartSurface"))
+                                @using (Html.BeginUmbracoForm("AddToCart", "CartSurface", null, htmlAttributes: new { id = "addToCart"}))
                                 {
                                     @Html.Hidden("productReference", Model.GetProductReference())
 
@@ -44,3 +46,24 @@
         </div>
     </div>
 </article>
+
+@section ScriptsBottom
+{
+    @if (!(TempData["addedProductReference"]?.ToString()).IsNullOrWhiteSpace())
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toastify({
+                    text: "Product added to cart successfully",
+                    duration: 0,
+                    destination: "@cartPage.Url",
+                    newWindow: false,
+                    gravity: "bottom",
+                    position: "center",
+                    close: true,
+                    stopOnFocus: true,
+                }).showToast();
+            });
+        </script>
+    }
+}

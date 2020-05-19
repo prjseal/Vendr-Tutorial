@@ -472,3 +472,12 @@ h2 a:after {
 h2 a:after:hover {
     text-decoration: none;
 }
+
+body div.toastify-center {
+    max-width: max-content;
+}
+
+#addToCart div.input-group {
+    width: 25%;
+    margin-bottom: 20px;
+}

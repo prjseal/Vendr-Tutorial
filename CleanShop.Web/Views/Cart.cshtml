@@ -35,56 +35,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in order.OrderLines.Select((ol, i) => new {OrderLine = ol, Index = i}))
-                            {
-                                var product = Umbraco.Content(item.OrderLine.ProductReference.As<Guid>());
-                                var image = product.Value<IPublishedContent>("mainImage");
-                                <tr>
-                                    <td>
-                                        <div>
-                                            @if (image != null)
-                                            {
-                                                <a href="@product.Url">
-                                                    <img src="@image.GetCropUrl(120, 120)" alt="..."/>
-                                                </a>
-                                            }
-                                        </div>
-                                    </td>
-                                    <td colspan="2">
-                                        <a href="@product.Url">@item.OrderLine.Name</a>
-                                    </td>
-                                    <td>@(item.OrderLine.UnitPrice.Value.Formatted())</td>
-                                    <td>
-                                        <div class="input-group">
-                                            @Html.Hidden($"orderLines[{item.Index}].Id", item.OrderLine.Id)
-                                            @Html.TextBox($"orderLines[{item.Index}].Quantity", (int)item.OrderLine.Quantity, 
-                                                new { @class="form-control input-number quantity", type="number"})
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @(item.OrderLine.TotalPrice.Value.Formatted())
-                                    </td>
-                                    <td>
-                                        <a href="@Url.SurfaceAction("RemoveFromCart", "CartSurface", new {OrderLineId = item.OrderLine.Id})" rel="tooltip" class="btn btn-link">
-                                            Remove <i class="fas fa-times"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                                <tr>
-                                    <td></td>
-                                    <td colspan="2">Total</td>
-                                    <td class="td-price">
-                                        @(order.SubtotalPrice.Value.Formatted())
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <button class="btn btn-success btn-round" title="Refresh Cart">Update Cart <i class="fas fa-sync"></i></button>
-                                    </td>
-                                    <td class="text-right">
-                                        <a href="/checkout/" class="btn btn-info btn-round">Go to checkout <i class="fas fa-shopping-cart"></i></a>
-                                    </td>
-                                </tr>
+                        @foreach (var item in order.OrderLines.Select((ol, i) => new {OrderLine = ol, Index = i}))
+                        {
+                            var product = Umbraco.Content(item.OrderLine.ProductReference.As<Guid>());
+                            var image = product.Value<IPublishedContent>("mainImage");
+                            <tr>
+                                <td>
+                                    <div>
+                                        @if (image != null)
+                                        {
+                                            <a href="@product.Url">
+                                                <img src="@image.GetCropUrl(120, 120)" alt="..."/>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                                <td colspan="2">
+                                    <a href="@product.Url">@item.OrderLine.Name</a>
+                                </td>
+                                <td>@(item.OrderLine.UnitPrice.Value.Formatted())</td>
+                                <td>
+                                    <div class="input-group">
+                                        @Html.Hidden($"orderLines[{item.Index}].Id", item.OrderLine.Id)
+                                        @Html.TextBox($"orderLines[{item.Index}].Quantity", (int)item.OrderLine.Quantity, 
+                                            new { @class="form-control input-number quantity", type="number"})
+                                    </div>
+                                </td>
+                                <td>
+                                    @(item.OrderLine.TotalPrice.Value.Formatted())
+                                </td>
+                                <td>
+                                    <a href="@Url.SurfaceAction("RemoveFromCart", "CartSurface", new {OrderLineId = item.OrderLine.Id})" rel="tooltip" class="btn btn-link">
+                                        Remove <i class="fas fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td></td>
+                            <td colspan="2">Total</td>
+                            <td class="td-price">
+                                @(order.SubtotalPrice.Value.Formatted())
+                            </td>
+                            <td></td>
+                            <td>
+                                <button class="btn btn-success btn-round" title="Refresh Cart">Update Cart <i class="fas fa-sync"></i></button>
+                            </td>
+                            <td class="text-right">
+                                <a href="/checkout/" class="btn btn-info btn-round">Go to checkout <i class="fas fa-shopping-cart"></i></a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -102,3 +102,38 @@
         }
     </div>
 </article>
+    
+@section ScriptsBottom
+{
+    @if (!(TempData["cartUpdated"]?.ToString()).IsNullOrWhiteSpace())
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toastify({
+                    text: "Cart updated",
+                    duration: 3000,
+                    gravity: "bottom",
+                    position: "center",
+                    close: true,
+                    stopOnFocus: true,
+                }).showToast();
+            });
+        </script>
+    }
+
+    @if (!(TempData["itemRemovedFromCart"]?.ToString()).IsNullOrWhiteSpace())
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Toastify({
+                    text: "Item removed from cart",
+                    duration: 3000,
+                    gravity: "bottom",
+                    position: "center",
+                    close: true,
+                    stopOnFocus: true,
+                }).showToast();
+            });
+        </script>
+    }
+}

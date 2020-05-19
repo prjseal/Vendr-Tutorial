@@ -2,6 +2,7 @@
 
 @{
     var homePage = Model.AncestorOrSelf<Home>();
+    var cartPage = homePage.ChildrenOfType("cart").FirstOrDefault();
 }
 
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
@@ -16,15 +17,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="@homePage.Url">@homePage.Name</a>
                 </li>
-                @foreach (var page in homePage.Children.Where(x => !x.Value<bool>("umbracoNaviHide")))
+                @foreach (var page in homePage.Children.Where(x => !x.Value<bool>("umbracoNaviHide") && x.ContentType.Alias != "cart"))
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="@page.Url">@page.Name</a>
                     </li>
                 }
-                <li class="nav-item">
-                    <a class="nav-link" href="/cart/"><i class="fas fa-shopping-cart"></i> &nbsp;Cart&nbsp;@Html.Action("CartCount", "CartSurface")</a>
-                </li>
+                
+                @if (cartPage != null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@cartPage"><i class="fas fa-shopping-cart"></i> @cartPage.Name @Html.Action("CartCount", "CartSurface")</a>
+                    </li>
+                }
             </ul>
         </div>
     </div>
