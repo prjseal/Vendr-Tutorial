@@ -27,7 +27,7 @@
                 @if (cartPage != null)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="@cartPage"><i class="fas fa-shopping-cart"></i> @cartPage.Name @Html.Action("CartCount", "CartSurface")</a>
+                        <a class="nav-link" href="@cartPage.Url"><i class="fas fa-shopping-cart"></i> @cartPage.Name @Html.Action("CartCount", "CartSurface")</a>
                     </li>
                 }
             </ul>

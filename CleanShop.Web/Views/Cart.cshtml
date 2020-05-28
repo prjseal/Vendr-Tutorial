@@ -5,8 +5,10 @@
 @using Vendr.Core
 @using ContentModels = Umbraco.Web.PublishedModels;
 @{
-	Layout = "master.cshtml";
+    Layout = "master.cshtml";
     var order = Model.GetCurrentOrder();
+    var homePage = Model.AncestorOrSelf<Home>();
+    var checkoutPage = homePage.ChildrenOfType("vendrCheckoutCheckoutPage").FirstOrDefault();
 }
 
 @Html.Partial("~/Views/Partials/pageHeader.cshtml", new PageHeaderViewModel(Model.Name, Model.Title, Model.Subtitle, Model.MainImage))
@@ -82,7 +84,7 @@
                                 <button class="btn btn-success btn-round" title="Refresh Cart">Update Cart <i class="fas fa-sync"></i></button>
                             </td>
                             <td class="text-right">
-                                <a href="/checkout/" class="btn btn-info btn-round">Go to checkout <i class="fas fa-shopping-cart"></i></a>
+                                <a href="@checkoutPage.Url" class="btn btn-info btn-round">Go to checkout <i class="fas fa-shopping-cart"></i></a>
                             </td>
                         </tr>
                         </tbody>
