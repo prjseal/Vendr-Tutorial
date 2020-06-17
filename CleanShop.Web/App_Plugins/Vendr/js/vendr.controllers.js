@@ -2794,6 +2794,17 @@
 
         vm.loadItems = function (opts, callback) {
 
+            if (typeof opts === "function") {
+                callback = opts;
+                opts = undefined;
+            }
+
+            if (!opts) {
+                opts = {
+                    pageNumber: 1
+                };
+            }
+
             // Apply filters
             vm.options.filters.forEach(fltr => {
                 if (fltr.value && fltr.value.length > 0) {
@@ -2834,7 +2845,9 @@
         var onVendrEvent = function (evt, args) {
             if (args.entityType === 'Order' && args.storeId === storeId) {
                 vm.page.loading = true;
-                vm.loadItems(function () {
+                vm.loadItems({
+                    pageNumber: 1
+                }, function () {
                     vm.page.loading = false;
                 });
             }
